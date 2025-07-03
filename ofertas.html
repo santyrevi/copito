@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>COPITO | Ofertas</title>
+  <link rel="stylesheet" href="estilos.css">
+  
+</head>
+<body>
+  <header>
+    <div class="nav-container">
+      <div class="nav-logo-container">
+        <img src="logo.png" alt="Logo Copito" class="logo">
+        <h1 class="logo-title">COPITO</h1>
+      </div>
+      <nav>
+        <a href="inicio.html">Inicio</a>
+        <a href="carrito.html">Carrito</a>
+        <a href="favoritos.html">Favoritos</a>
+        <a href="ofertas.html">Ofertas</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="productos" id="contenedor-ofertas"></main>
+
+  <script>
+    let productos = [
+      {
+        nombre: "🧴 Base Líquida Pastel Touch",
+        precio: 120,
+        imagen: "copito_img_1.jpg",
+        descripcion: "Cobertura ligera con acabado natural en tono beige claro."
+      },
+      {
+        nombre: "🧴 Base Fluida Golden Skin",
+        precio: 135,
+        imagen: "copito_img_2.jpg",
+        descripcion: "Base de larga duración para un acabado cálido."
+      },
+      {
+        nombre: "💕 Rubor Compacto Coral Kiss",
+        precio: 95,
+        imagen: "copito_img_3.jpg",
+        descripcion: "Rubor en polvo tono coral vibrante con empaque rosa."
+      },
+      {
+        nombre: "✨ Iluminador Glow Dust",
+        precio: 110,
+        imagen: "copito_img_4.jpg",
+        descripcion: "Polvo iluminador suave para resplandor natural."
+      },
+      {
+        nombre: "💄 Gloss Líquido Cherry Shine",
+        precio: 89,
+        imagen: "copito_img_5.jpg",
+        descripcion: "Brillo labial intenso con pigmento rojizo metálico."
+      },
+      {
+        nombre: "🎨 Paleta de Sombras Sunset Bloom",
+        precio: 160,
+        imagen: "copito_img_6.jpg",
+        descripcion: "9 tonos cálidos y morados para looks románticos y modernos."
+      }
+    ];
+
+    // Incluir productos personalizados del localStorage
+    const personalizados = JSON.parse(localStorage.getItem('productos')) || [];
+    personalizados.forEach(p => {
+      const yaExiste = productos.some(prod => prod.nombre === p.nombre && prod.precio == p.precio);
+      if (!yaExiste) productos.push(p);
+    });
+
+    const contenedor = document.getElementById('contenedor-ofertas');
+
+    // Mostrar solo productos con precio menor o igual a 100
+    const ofertas = productos.filter(p => p.precio <= 100);
+
+    ofertas.forEach(producto => {
+      const card = document.createElement('div');
+      card.className = 'producto';
+      const nombreURL = encodeURIComponent(producto.nombre);
+      card.innerHTML = `
+        <img src="${producto.imagen}" alt="${producto.nombre}">
+        <h2>${producto.nombre}</h2>
+        <p>$${producto.precio}</p>
+        <p class="descripcion">${producto.descripcion}</p>
+        <div class="botones-acciones">
+          <button onclick='agregarAFavoritos(${JSON.stringify(producto)})'>❤</button>
+          <button onclick='agregarAlCarrito(${JSON.stringify(producto)})'>🛒</button>
+          <button onclick='verDetalles("${nombreURL}")'>🔍</button>
+        </div>
+      `;
+      contenedor.appendChild(card);
+    });
+
+    function agregarAlCarrito(producto) {
+      let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+      carrito.push(producto);
+      localStorage.setItem('carrito', JSON.stringify(carrito));
+      agregarNotificacion(`Agregaste "${producto.nombre}" al carrito`);
+      alert(`${producto.nombre} agregado al carrito`);
+    }
+
+    function agregarAFavoritos(producto) {
+      let favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
+      favoritos.push(producto);
+      localStorage.setItem('favoritos', JSON.stringify(favoritos));
+      agregarNotificacion(`Añadiste "${producto.nombre}" a favoritos`);
+      alert(`${producto.nombre} añadido a favoritos`);
+    }
+
+    function agregarNotificacion(mensaje) {
+      let notificaciones = JSON.parse(localStorage.getItem('notificaciones')) || [];
+      const nueva = {
+        titulo: "Notificación de COPITO",
+        mensaje,
+        fecha: new Date().toLocaleString(),
+        leida: false
+      };
+      notificaciones.unshift(nueva);
+      localStorage.setItem('notificaciones', JSON.stringify(notificaciones));
+    }
+
+    function verDetalles(nombreProducto) {
+      window.location.href = `detalle.html?nombre=${nombreProducto}`;
+    }
+  </script>
+</body>
+</html>

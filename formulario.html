@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PAGO | COPITO</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <header>
+  <div class="nav-container">
+    <div class="nav-logo-container">
+      <img src="logo.png" alt="Logo Nature" class="logo">
+      <h1 class="logo-title">COPITO</h1>
+    </div>
+    <nav>
+     <a href="carrito.html">Volver</a>
+    </nav>
+  </div>
+</header>
+<body>
+  <div class="contenedor-pago">
+    <h2>Selecciona tu método de pago</h2>
+
+    <!-- Selección de método -->
+    <form id="formMetodo">
+      <label><input type="radio" name="metodo" value="Efectivo" required> Efectivo</label>
+      <label><input type="radio" name="metodo" value="Tarjeta"> Tarjeta de Crédito</label>
+      <label><input type="radio" name="metodo" value="PayPal"> PayPal</label>
+      <label><input type="radio" name="metodo" value="MercadoPago"> Mercado Pago</label>
+      <button type="submit">Continuar</button>
+    </form>
+
+    <!-- Formulario dinámico que aparece al elegir -->
+    <div id="formularioDetalle" class="formulario-detalle" style="display: none;"></div>
+  </div>
+
+  <script>
+    const formMetodo = document.getElementById("formMetodo");
+    const formularioDetalle = document.getElementById("formularioDetalle");
+
+    formMetodo.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const metodo = document.querySelector('input[name="metodo"]:checked').value;
+      mostrarFormulario(metodo);
+    });
+
+    function mostrarFormulario(metodo) {
+      formularioDetalle.style.display = "block";
+
+      if (metodo === "Efectivo") {
+        formularioDetalle.innerHTML = `
+          <h3>Pago en Efectivo</h3>
+          <p>Presenta este código en tu punto de pago:</p>
+          <div class="codigo-barras">|| ||| | |||| || |||</div>
+          <button onclick="confirmarCompra('${metodo}')">Confirmar Compra</button>
+        `;
+      } else if (metodo === "Tarjeta") {
+        formularioDetalle.innerHTML = `
+          <h3>Pago con Tarjeta</h3>
+          <form onsubmit="event.preventDefault(); confirmarCompra('${metodo}')">
+            <input type="text" placeholder="Número de tarjeta" required><br>
+            <input type="text" placeholder="Nombre del titular" required><br>
+            <input type="month" required><br>
+            <input type="text" placeholder="CVV" required><br>
+            <button type="submit">Confirmar Compra</button>
+          </form>
+        `;
+      } else if (metodo === "PayPal") {
+        formularioDetalle.innerHTML = `
+          <h3>Pago con PayPal</h3>
+          <form onsubmit="event.preventDefault(); confirmarCompra('${metodo}')">
+            <input type="email" placeholder="Correo PayPal" required><br>
+            <button type="submit">Confirmar Compra</button>
+          </form>
+        `;
+      } else if (metodo === "MercadoPago") {
+        formularioDetalle.innerHTML = `
+          <h3>Pago con Mercado Pago</h3>
+          <form onsubmit="event.preventDefault(); confirmarCompra('${metodo}')">
+            <input type="email" placeholder="Correo Mercado Pago" required><br>
+            <button type="submit">Confirmar Compra</button>
+          </form>
+        `;
+      }
+    }
+
+    function confirmarCompra(metodo) {
+      const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+      if (carrito.length === 0) {
+        alert("Tu carrito está vacío.");
+        return;
+      }
+
+      // Guardar en historial
+      let historial = JSON.parse(localStorage.getItem("historialCompras")) || [];
+      historial = [...carrito, ...historial];
+      localStorage.setItem("historialCompras", JSON.stringify(historial));
+
+      // Guardar notificación
+      let notificaciones = JSON.parse(localStorage.getItem("notificaciones")) || [];
+      const nueva = {
+        titulo: "NATURE",
+        mensaje: "Compra realizada con método: " + metodo,
+        fecha: new Date().toLocaleString(),
+        leida: false
+      };
+      notificaciones.unshift(nueva);
+      localStorage.setItem("notificaciones", JSON.stringify(notificaciones));
+
+      // Limpiar carrito
+      localStorage.removeItem("carrito");
+
+      alert("¡Compra realizada con éxito!");
+      window.location.href = "carrito.html";
+    }
+  </script>
+</body>
+</html>
