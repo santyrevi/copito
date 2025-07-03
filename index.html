@@ -3,19 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>COPITO | Ofertas</title>
+  <title>COPITO | Inicio</title>
   <link rel="stylesheet" href="estilos.css">
-  
 </head>
 <body>
   <header>
     <div class="nav-container">
       <div class="nav-logo-container">
-        <img src="logo.png" alt="Logo Copito" class="logo">
+        <img src="logo.png" alt="Logo Nature" class="logo">
         <h1 class="logo-title">COPITO</h1>
       </div>
       <nav>
-        <a href="index.html">Inicio</a>
         <a href="carrito.html">Carrito</a>
         <a href="favoritos.html">Favoritos</a>
         <a href="ofertas.html">Ofertas</a>
@@ -23,61 +21,61 @@
     </div>
   </header>
 
-  <main class="productos" id="contenedor-ofertas"></main>
+  <main class="productos" id="contenedor-productos"></main>
 
   <script>
     let productos = [
-      {
-       nombre: "Corrector |Copito| CoverTouch",
-       precio: 120,
-       imagen: "copito_img_1.jpg",
-       descripcion: "Oculta imperfecciones, ojeras y enrojecimiento al instante con una fórmula cremosa de alta cobertura. Su aplicador suave permite una aplicación precisa y uniforme. Ideal para todo tipo de piel."
-      },
-      {
-       nombre: "Base líquida |Copito| SkinFlawless",
-       precio: 135,
-       imagen: "copito_img_2.jpg",
-       descripcion: "Base líquida de larga duración con acabado natural y luminoso. Su textura ligera se adapta al tono de tu piel dejando un efecto piel de porcelana sin sensación pesada."
-      },
-      {
-       nombre: "Brillo labial |Copito| ShineKiss",
-       precio: 95,
-       imagen: "copito_img_3.jpg",
-       descripcion: "Brillo labial ultra brillante con color intenso. Hidrata y da volumen a los labios con una textura ligera y no pegajosa. ¡Besa con estilo!"
-      },
-      {  
-       nombre: "Rubor |Copito| CheekPop",
-       precio: 110,
-       imagen: "copito_img_4.jpg",
-       descripcion: "Dale vida a tu rostro con este rubor en tonos vibrantes. Su fórmula sedosa se difumina fácilmente, dejando un acabado radiante y juvenil en tus mejillas."
-      },
-      {
-       nombre: "Paleta de sombras |Copito| ColorVibes",
-       precio: 89,
-       imagen: "copito_img_5.jpg",
-       descripcion: "Explora tu creatividad con esta paleta de 9 tonos vibrantes. Texturas mate y satinadas ideales para looks de día y noche. ¡Haz que tus ojos hablen!"
-      },
-      {
-        nombre: "Iluminador |Copito| GlowBeam",
-        precio: 160,
-        imagen: "copito_img_6.jpg",
-        descripcion: "Aporta luz a tu rostro con este iluminador de alto brillo. Perfecto para resaltar pómulos, nariz y arco de Cupido con un efecto glow irresistible."
-      }
-    ];
+      
+  {
+    nombre: "Corrector |Copito| CoverTouch",
+    precio: 199,
+    imagen: "copito_img_1.jpg",
+    descripcion: "Cobertura ligera con acabado natural en tono beige claro."
+  },
+  {
+    nombre: "Base líquida |Copito| SkinFlawless",
+    precio: 289,
+    imagen: "copito_img_2.jpg",
+    descripcion: "Base de larga duración para un acabado cálido."
+  },
+  {
+    nombre: "Brillo labial |Copito| ShineKiss",
+    precio: 159,
+    imagen: "copito_img_3.jpg",
+    descripcion: "Rubor en polvo tono coral vibrante con empaque rosa."
+  },
+  {
+    nombre: "Rubor |Copito| CheekPop",
+    precio: 179,
+    imagen: "copito_img_4.jpg",
+    descripcion: "Polvo iluminador suave para resplandor natural."
+  },
+  {
+    nombre: "Paleta de sombras |Copito| ColorVibes",
+    precio: 349,
+    imagen: "copito_img_5.jpg",
+    descripcion: "Brillo labial intenso con pigmento rojizo metálico."
+  },
+  {
+    nombre: "Iluminador |Copito| GlowBeam",
+    precio: 229,
+    imagen: "copito_img_6.jpg",
+    descripcion: "9 tonos cálidos y morados para looks románticos y modernos."
+  }
+];
 
-    // Incluir productos personalizados del localStorage
+  
+
+    // Agregar productos personalizados guardados desde productos.html
     const personalizados = JSON.parse(localStorage.getItem('productos')) || [];
     personalizados.forEach(p => {
       const yaExiste = productos.some(prod => prod.nombre === p.nombre && prod.precio == p.precio);
       if (!yaExiste) productos.push(p);
     });
 
-    const contenedor = document.getElementById('contenedor-ofertas');
+    const contenedor = document.getElementById('contenedor-productos');
 
-    // Mostrar solo productos con precio menor o igual a 100
-    const ofertas = productos.filter(p => p.precio <= 100);
-
-    ofertas.forEach(producto => {
+    productos.forEach(producto => {
       const card = document.createElement('div');
       card.className = 'producto';
       const nombreURL = encodeURIComponent(producto.nombre);
@@ -85,7 +83,6 @@
         <img src="${producto.imagen}" alt="${producto.nombre}">
         <h2>${producto.nombre}</h2>
         <p>$${producto.precio}</p>
-        <p class="descripcion">${producto.descripcion}</p>
         <div class="botones-acciones">
           <button onclick='agregarAFavoritos(${JSON.stringify(producto)})'>❤</button>
           <button onclick='agregarAlCarrito(${JSON.stringify(producto)})'>🛒</button>
@@ -114,7 +111,7 @@
     function agregarNotificacion(mensaje) {
       let notificaciones = JSON.parse(localStorage.getItem('notificaciones')) || [];
       const nueva = {
-        titulo: "Notificación de COPITO",
+        titulo: "Notificación de NATURE",
         mensaje,
         fecha: new Date().toLocaleString(),
         leida: false
